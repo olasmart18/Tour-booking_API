@@ -2,6 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const tourSchema = Schema({
   place: String,
+  destination: String,
   bookDate: {
     type: Date
   },
@@ -18,6 +19,6 @@ const tourSchema = Schema({
   timestamps: true
 });
 
-const Tour = new model('Tour', tourSchema);
+const BookTour = new model('BookTour', tourSchema);
 
-module.exports = Tour;
+module.exports = BookTour;
