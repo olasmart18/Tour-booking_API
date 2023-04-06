@@ -25,9 +25,32 @@ exports.allTour = async (req, res) => {
   }
 };
 
-// //// createTour create new tour ///////////
+// //// book a new tour ///////////
 exports.createTour = async (req, res) => {
+  const bookTour = new Tour(req.body);
 
+  try {
+    const saveTour = await bookTour.save();
+    if (saveTour) {
+      res.status(201).json({
+        success: true,
+        message: 'you have succesful book a tour',
+        data: saveTour
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: 'failed to book tour, try again',
+        data: saveTour
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      success: false,
+      message: 'something went wrong, try again'
+    });
+  }
 };
 
 /// //  getSingleTour  get tour by id or tour name /////////
