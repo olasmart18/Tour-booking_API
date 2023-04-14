@@ -117,3 +117,28 @@ exports.deleteTours = async (req, res) => {
     });
   }
 };
+
+// ////update tour //////////
+exports.updateTour = async (req, res) => {
+  const TourId = req.params.id;
+  try {
+    const updateTour = await Tour.findByIdAndUpdate(TourId,
+      { $set: req.body }, { new: true });
+    if (!updateTour) {
+      res.status(404).json({
+        success: false,
+        message: 'not found'
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: 'tour has been updated',
+      data: updateTour
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'something went wrong, try again'
+    });
+  }
+};
