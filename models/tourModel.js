@@ -12,7 +12,7 @@ const tourSchema = Schema({
   headNumber: {
     type: Number,
     min: 1,
-    max: 20
+    max: 50
   }
 
 }, {

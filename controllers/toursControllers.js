@@ -25,14 +25,14 @@ exports.allTour = async (req, res) => {
   }
 };
 
-// //// book a new tour ///////////
+// //// create a new tour ///////////
 exports.createTour = async (req, res) => {
   const bookTour = new Tour(req.body);
 
   try {
     const saveTour = await bookTour.save();
     if (saveTour) {
-      res.status(201).json({
+      res.status(200).json({
         success: true,
         message: 'you have succesful book a tour',
         data: saveTour
@@ -45,8 +45,7 @@ exports.createTour = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
-    res.status(404).json({
+    res.status(500).json({
       success: false,
       message: 'something went wrong, try again'
     });
@@ -55,5 +54,66 @@ exports.createTour = async (req, res) => {
 
 /// //  getSingleTour  get tour by id or tour name /////////
 exports.getSingleTour = async (req, res) => {
+  const tourId = req.params.id;
 
+  try {
+    const findTourById = await Tour.findOne({ _id: tourId });
+    if (!findTourById) {
+      return res.status(404).json({
+        success: false,
+        message: 'not found'
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: 'tour found',
+      data: findTourById
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'no tour is found, try again'
+    });
+  }
+};
+
+/// delete single tours ////////
+exports.deleteSingleTour = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const deleteTour = await Tour.findByIdAndDelete(id);
+    if (!deleteTour) {
+      return res.status(404).json({
+        success: false,
+        message: 'not found'
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: 'deleted  tours from database',
+      data: deleteTour
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'something went wrong, try again'
+    });
+  }
+};
+
+// ////delete all tours//////////
+exports.deleteTours = async (req, res) => {
+  try {
+    const deleteTours = await Tour.deleteMany();
+    res.status(200).json({
+      success: true,
+      message: 'successful',
+      data: deleteTours
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'something went wrong, try again'
+    });
+  }
 };
