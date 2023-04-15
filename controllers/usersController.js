@@ -52,3 +52,21 @@ exports.getSingleUser = async (req, res) => {
     });
   }
 };
+
+// delete single user
+exports.deleteSingleUser = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const delUser = await User.findByIdAndDelete(userId);
+    res.status(200).json({
+      success: true,
+      message: 'successful',
+      data: `user with ${delUser._id} ID has been deleted`
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'something went wrong, try again'
+    });
+  }
+};
