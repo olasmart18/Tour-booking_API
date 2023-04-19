@@ -70,3 +70,41 @@ exports.deleteSingleUser = async (req, res) => {
     });
   }
 };
+
+// delete all user
+exports.deleteAll = async (req, res) => {
+  try {
+    await User.deleteMany();
+    res.status(200).json({
+      success: true,
+      message: 'successful'
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'something went wrong, try again'
+    });
+  }
+};
+
+// update user
+exports.updateUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userId,
+      { $set: req.body }, { new: true });
+    res.status(200).json({
+      success: true,
+      message: 'successful',
+      data: updatedUser
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'something went wrong, try again'
+    });
+  }
+};
+
+//
