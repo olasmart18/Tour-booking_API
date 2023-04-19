@@ -1,13 +1,16 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/usersModel');
 
+// register new user
 exports.register = async (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
 
+  // hash password before saving in db
   const saltRound = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(password, saltRound);
 
+  // check if user already exist before saving to db
   const userExist = await User.findOne({ email: email });
   if (!userExist) {
     const NewReg = new User({
@@ -39,6 +42,38 @@ exports.register = async (req, res) => {
   });
 };
 
+// login user
 exports.login = async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
 
+  try {
+    // check if user exist
+    const userExist = await User.findOne({ email: email });
+
+    if (!userExist) {
+      return res.status(404).json({
+        success: false,
+        message: 'user does not exist, please register'
+      });
+    }
+    // compare password
+    const PwdMatch = bcrypt.compareSync(password, userExist.password);
+    // if user exit, check if password matching user password
+    if (!PwdMatch) {
+      return res.status(404).json({
+        success: false,
+        message: 'incorrect user or password'
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'successfully logged in'
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: 'error!, something went wrong while signing in'
+    });
+  }
 };
