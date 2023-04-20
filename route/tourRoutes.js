@@ -7,14 +7,16 @@ const {
   getSingleTour,
   deleteSingleTour,
   deleteTours,
-  updateTour
+  updateTour,
+  searchTour
 } = require('../controllers/toursControllers');
 
-route.get('/api/tours', allTour);
-route.get('/api/tours/:id', getSingleTour);
-route.post('/api/tours', createTour);
-route.delete('/api/tours/:id', deleteSingleTour);
-route.delete('/api/tours', deleteTours);
-route.patch('/api/tours/:id', updateTour);
+route.get('/tours', allTour);
+route.get('/tours/:id', getSingleTour);
+route.post('/tours', createTour);
+route.delete('/tours/:id', deleteSingleTour);
+route.delete('/tours', deleteTours);
+route.patch('/tours/:id', updateTour);
+route.get('/tours/search/searchTour', searchTour);
 
 module.exports = route;
