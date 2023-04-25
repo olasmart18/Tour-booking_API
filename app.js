@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 require('dotenv').config();
 const connect = require('./config/db');
 const tourRoute = require('./route/tourRoutes');
@@ -11,6 +13,8 @@ const app = express();
 
 // middleware
 app.use(express.json());
+app.use(cookieParser());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/app', tourRoute);

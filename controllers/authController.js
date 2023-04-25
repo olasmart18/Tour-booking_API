@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/usersModel');
 
 // register new user
@@ -66,9 +67,18 @@ exports.login = async (req, res) => {
         message: 'incorrect user or password'
       });
     }
-    return res.status(200).json({
+    // create a token
+    // const { role, ...rest } = User._doc;
+    const token = jwt.sign({ id: User._id, role: User.role },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: '2d' });
+    return res.cookie('accessToken', token, {
+      expires: token.expiresIn,
+      httpOnly: true
+    }).status(200).json({
       success: true,
-      message: 'successfully logged in'
+      message: 'successfully logged in',
+      data: { token }
     });
   } catch (err) {
     return res.status(500).json({

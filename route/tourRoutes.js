@@ -10,8 +10,10 @@ const {
   updateTour,
   searchTour
 } = require('../controllers/toursControllers');
+const verifyUser = require('../util/verify').verifyUser;
+const verifyAdmin = require('../util/verify').verifyAdmin;
 
-route.get('/tours', allTour);
+route.get('/tours', verifyAdmin, allTour);
 route.get('/tours/:id', getSingleTour);
 route.post('/tours', createTour);
 route.delete('/tours/:id', deleteSingleTour);

@@ -3,7 +3,7 @@ const Tour = require('../models/tourModel');
 // //// allTour get all availaible tours ////////
 exports.allTour = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    const tours = await Tour.find({});
     if (tours.length !== 0) {
       res.status(200).json({
         success: true,
@@ -18,9 +18,9 @@ exports.allTour = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: 'something went wrong, try again'
+      message: 'failed, try again'
     });
   }
 };

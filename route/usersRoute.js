@@ -8,6 +8,7 @@ const {
   deleteAll,
   updateUser
 } = require('../controllers/usersController');
+// const verifyUser = require('../util/verify');
 
 route.post('/users', createUser);
 route.get('/users', getAllUser);
