@@ -8,12 +8,13 @@ const {
   deleteAll,
   updateUser
 } = require('../controllers/usersController');
-// const verifyUser = require('../util/verify');
+const verifyUser = require('../util/verify').verifyUser;
+const verifyAdmin = require('../util/verify').verifyAdmin;
 
 route.post('/users', createUser);
-route.get('/users', getAllUser);
-route.get('/users/:id', getSingleUser);
-route.delete('/users/:id', deleteSingleUser);
-route.delete('/users', deleteAll);
-route.patch('/users/:id', updateUser);
+route.get('/users', verifyAdmin, getAllUser);
+route.get('/users/:id', verifyUser, getSingleUser);
+route.delete('/users/:id', verifyUser, deleteSingleUser);
+route.delete('/users', verifyAdmin, deleteAll);
+route.patch('/users/:id', verifyUser, updateUser);
 module.exports = route;

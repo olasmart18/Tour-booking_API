@@ -13,12 +13,12 @@ const {
 const verifyUser = require('../util/verify').verifyUser;
 const verifyAdmin = require('../util/verify').verifyAdmin;
 
-route.get('/tours', verifyAdmin, allTour);
-route.get('/tours/:id', getSingleTour);
-route.post('/tours', createTour);
-route.delete('/tours/:id', deleteSingleTour);
-route.delete('/tours', deleteTours);
-route.patch('/tours/:id', updateTour);
-route.get('/tours/search/searchTour', searchTour);
+route.get('/tours', verifyAdmin, verifyUser, allTour);
+route.get('/tours/:id', verifyUser, verifyAdmin, getSingleTour);
+route.post('/tours', verifyAdmin, createTour);
+route.delete('/tours/:id', verifyAdmin, deleteSingleTour);
+route.delete('/tours', verifyAdmin, deleteTours);
+route.patch('/tours/:id', verifyAdmin, updateTour);
+route.get('/tours/search/searchTour', verifyAdmin, verifyUser, searchTour);
 
 module.exports = route;

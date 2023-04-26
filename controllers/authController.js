@@ -68,7 +68,6 @@ exports.login = async (req, res) => {
       });
     }
     // create a token
-    // const { role, ...rest } = User._doc;
     const token = jwt.sign({ id: User._id, role: User.role },
       process.env.JWT_SECRET_KEY,
       { expiresIn: '2d' });
@@ -77,8 +76,7 @@ exports.login = async (req, res) => {
       httpOnly: true
     }).status(200).json({
       success: true,
-      message: 'successfully logged in',
-      data: { token }
+      message: 'successfully logged in'
     });
   } catch (err) {
     return res.status(500).json({
