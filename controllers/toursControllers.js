@@ -3,7 +3,7 @@ const Tour = require('../models/tourModel');
 // //// allTour get all availaible tours ////////
 exports.allTour = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    const tours = await Tour.find({});
     if (tours.length !== 0) {
       res.status(200).json({
         success: true,
@@ -18,9 +18,9 @@ exports.allTour = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: 'something went wrong, try again'
+      message: 'failed, try again'
     });
   }
 };
@@ -139,6 +139,35 @@ exports.updateTour = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'something went wrong, try again'
+    });
+  }
+};
+
+// get tour by search
+exports.searchTour = async (req, res) => {
+  const searchById = req.query.id;
+  const place = new RegExp(req.query.place, 'i'); // i means case sensitive
+  const destination = req.query.destination;
+  const maxGroup = parseInt(req.query.maxGroup);
+  const distance = parseInt(req.query.distance);
+
+  try {
+    const tourBySeaech = await Tour.find({
+      searchById,
+      destination,
+      place,
+      distance: { $gte: distance },
+      maxGroup: { $gte: maxGroup }
+    });
+    res.status(200).json({
+      success: true,
+      message: 'search found',
+      data: tourBySeaech
+    });
+  } catch (err) {
+    res.status(404).json({
+      success: false,
+      message: 'search does not match any results'
     });
   }
 };

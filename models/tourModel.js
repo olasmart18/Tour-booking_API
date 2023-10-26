@@ -9,10 +9,14 @@ const tourSchema = Schema({
   tourDate: {
     type: Date
   },
-  headNumber: {
+  maxGroup: {
     type: Number,
     min: 1,
     max: 50
+  },
+  distance: {
+    type: Number,
+    required: true
   }
 
 }, {
