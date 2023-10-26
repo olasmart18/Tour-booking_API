@@ -1,19 +1,10 @@
 const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema({
-  firstName: {
-    type: String,
-    reqiured: true
-  },
-  lastName: {
+  username: {
     type: String,
     required: true
   },
-  // phone: {
-  //   type: BigInt,
-  //   required: true,
-  //   unique: true
-  // },
   email: {
     type: String,
     required: true,
@@ -23,9 +14,8 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  age: Number,
-  gender: String
-}, {
+}, 
+{
   timestamps: true
 });
 

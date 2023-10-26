@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const db = 'tourDB';
-const connect = async (req, res, next) => {
+const connect = async () => {
   try {
-    await mongoose.connect(`${process.env.MONGO_URI}${db}`);
+    await mongoose.connect(`${process.env.MONGO_URI}`);
     console.log('connected to db');
   } catch (error) {
     console.log(error);

@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
-const statusCode = require("http-status")
-
+const statusCode = require("http-status");
 const User = require("../models/usersModel");
+const passport = require("passport");
 
 // register new  user
 exports.createUser = async (req, res) => {
@@ -34,4 +34,29 @@ exports.createUser = async (req, res) => {
       message: err.message,
     });
   }
+};
+
+// login user
+exports.login = async (req, res, next) => {
+  passport.authenticate("local", (err, user) => {
+    if (err) {
+      return next(err);
+    } else {
+      if (!user) {
+        res.status(statusCode.NOT_FOUND).json({
+          message: "user not found",
+        });
+      } else {
+        // Here, we use req.login(user) to establish a login session
+        req.login(user, (err) => {
+          if (err) {
+            return next(err);
+          }
+          res.status(statusCode.OK).json({
+            message: "successfully looged in as " + user.username,
+          });
+        });
+      }
+    }
+  })(req, res, next)
 };
