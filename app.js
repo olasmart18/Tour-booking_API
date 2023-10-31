@@ -38,7 +38,7 @@ app.use(passport.session());
 
 // custom routes
 app.use('/api', tourRoute);
-app.use('/', UserRouter);
+app.use('/api', UserRouter);
 app.use('/api/auth', authRouter);
 
 connect(); // mongoDB connection 

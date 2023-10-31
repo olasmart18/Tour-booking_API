@@ -1,28 +1,42 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model } = require("mongoose");
 
-const tourSchema = Schema({
-  place: String,
-  destination: String,
-  bookDate: {
-    type: Date
+const tourSchema = Schema(
+  {
+    imageUrl: {
+      type: String,
+      require: true
+    },
+    country: {
+      type: String,
+      required: true,
+    },
+    state: {
+      type: String,
+      require: true,
+    },
+    destination: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    maxGroup: {
+      type: Number,
+      min: 1,
+      max: 30,
+    },
+    distance: {
+      type: Number,
+      required: true,
+    },
   },
-  tourDate: {
-    type: Date
-  },
-  maxGroup: {
-    type: Number,
-    min: 1,
-    max: 50
-  },
-  distance: {
-    type: Number,
-    required: true
+  {
+    timestamps: true,
   }
+);
 
-}, {
-  timestamps: true
-});
+const Tour = new model("Tour", tourSchema);
 
-const BookTour = new model('BookTour', tourSchema);
-
-module.exports = BookTour;
+module.exports = Tour;
