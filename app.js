@@ -9,6 +9,8 @@ const tourRoute = require('./route/tourRoutes');
 const UserRouter = require('./route/usersRoute');
 const authRouter = require('./route/auth');
 const initializePassport = require ("./utils/passport");
+const { logRoute } = require('./utils/verify');
+const logROute = require("./utils/verify").logRoute
 
 // initialize passport function to passport
 initializePassport(passport)
@@ -30,7 +32,7 @@ app.use(session({
         ttl: 24 * 7 * 60 * 60 
     }),
     secret: process.env.SECRET,
-    resave: false,
+    resave: true,
     saveUninitialized: true
 }));
 app.use(passport.initialize());
@@ -40,6 +42,9 @@ app.use(passport.session());
 app.use('/api', tourRoute);
 app.use('/api', UserRouter);
 app.use('/api/auth', authRouter);
+
+// log every route accessed
+app.use(logRoute);
 
 connect(); // mongoDB connection 
 app.listen(port, () => console.log(`server running on port ${port}`));
