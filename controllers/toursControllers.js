@@ -1,6 +1,7 @@
 const statusCode = require("http-status");
 const Tour = require("../models/tourModel");
 const BookTour = require("../models/bookTour");
+const BookedTour = require("../models/bookTour");
 
 // //// create a new tour ///////////
 exports.createTour = async (req, res) => {
@@ -23,7 +24,7 @@ exports.createTour = async (req, res) => {
   } catch (err) {
     res.status(statusCode.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: "something went wrong, try again "+ err.message
+      message: "something went wrong, try again " + err.message,
     });
   }
 };
@@ -42,7 +43,7 @@ exports.allTour = async (req, res) => {
       res.status(404).json({
         success: false,
         message: "no tour is found",
-        data: null
+        data: null,
       });
     }
   } catch (error) {
@@ -222,6 +223,31 @@ exports.getBookedTour = async (req, res) => {
         message: "successful",
         data: isTour,
       });
+    }
+  } catch (err) {
+    res.status(statusCode.INTERNAL_SERVER_ERROR).json({
+      message: err.message,
+    });
+  }
+};
+
+// update booked tour
+exports.updateBookedTour = async (req, res) => {
+  try {
+    const { tourId } = req.params;
+    const isBookedTour = await BookedTour.findById(tourId);
+    if (!isBookedTour) {
+      res.status(statusCode.NOT_FOUND).json({
+        message: "not found",
+      });
+    } else {
+      await BookedTour
+        .findByIdAndUpdate(tourId, { $set: req.body }, { new: true })
+        .then(() => {
+          res.status(statusCode.CREATED).json({
+            message: "your data has been updated"
+          })
+        });
     }
   } catch (err) {
     res.status(statusCode.INTERNAL_SERVER_ERROR).json({

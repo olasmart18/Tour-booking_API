@@ -12,7 +12,7 @@ if (!user) {
 
 const isAdmin = async (req, res, next) => {
     const user = req.user;
-    if (!req.user.role !== "admin") {
+    if (req.user.role !== "admin") {
         return res.status(statusCode.BAD_GATEWAY).json({
             message: "you are not authenticated"
         })
