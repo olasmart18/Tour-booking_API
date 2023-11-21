@@ -2,9 +2,17 @@ const { Schema, model } = require("mongoose");
 
 const tourSchema = Schema(
   {
-    imageUrl: {
-      type: String,
-      require: true
+    image: {
+      public_id: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
+      data: Buffer,
+      contentType: String,
     },
     country: {
       type: String,
