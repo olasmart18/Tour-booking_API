@@ -56,10 +56,10 @@ app.use('/', authRouter);
  
 
 // Catch undefined routes
-// app.all('*', (req, res, next) => {
-//     const err = new CustomError(`Can't find ${req.originalUrl} on this server!`, 404);
-//     next(err);
-//   });
+app.all('*', (req, res, next) => {
+    const err = new CustomError(`Can't find ${req.originalUrl} on this server!`, 404);
+    next(err);
+  });
 
  // Error handling middleware (should be defined last)
 app.use(errorHandler);

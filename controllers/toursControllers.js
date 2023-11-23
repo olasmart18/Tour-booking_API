@@ -4,14 +4,16 @@ const BookTour = require("../models/bookTour");
 const BookedTour = require("../models/bookTour");
 const upload = require("../utils/multerConfig");
 const uploadToCloudinary = require("../utils/cloudinary");
+const CustomError = require("../middlewares/error");
 const asyncWrapper = require("../utils/asyncWrapper").asyncWrapper;
 
 // //// create a new tour ///////////
-exports.createTour = asyncWrapper(async (req, res) => {
+exports.createTour = asyncWrapper(async (req, res, next) => {
   // call the upload method
   upload(req, res, async (err) => {
     if (err) {
-      res.status(statusCode.BAD_REQUEST).json({ mesage: err.msg });
+      const error = new CustomError(err.message, statusCode.BAD_REQUEST);
+      return next(error);
     } else {
       // upload image to cloudinary
       const cloudUpload = await uploadToCloudinary(req.file);
@@ -37,10 +39,11 @@ exports.createTour = asyncWrapper(async (req, res) => {
           data: tour,
         });
       } else {
-        res.status(statusCode.BAD_REQUEST).json({
-          success: false,
-          message: "failed to create tour, try again",
-        });
+        const error = new CustomError(
+          "ssomething went wrong, ty again",
+          statusCode.BAD_REQUEST
+        );
+        return next(error);
       }
     }
   });
@@ -69,10 +72,8 @@ exports.getSingleTour = asyncWrapper(async (req, res, next) => {
   const tourId = req.params.id;
   const findTourById = await Tour.findOne({ _id: tourId });
   if (!findTourById) {
-    return res.status(404).json({
-      success: false,
-      message: "not found",
-    });
+    const error = new CustomError("tour with the ID not fown", 404)
+    return next(error)
   }
   res.status(200).json({
     success: true,
@@ -86,10 +87,8 @@ exports.deleteSingleTour = asyncWrapper(async (req, res, next) => {
   const id = req.params.tourId;
   const isTour = await Tour.findByIdAndDelete(id);
   if (!isTour) {
-    return res.status(404).json({
-      success: false,
-      message: "not found",
-    });
+    const error = new CustomError("tour with the ID not fown", 404)
+    return next(error)
   } else {
     res.status(statusCode.OK).json({
       success: true,
@@ -103,9 +102,8 @@ exports.deleteSingleTour = asyncWrapper(async (req, res, next) => {
 exports.deleteTours = asyncWrapper(async (req, res, next) => {
   const deleteTours = await Tour.deleteMany();
   if (!deleteTours) {
-    res.status(statusCode.BAD_REQUEST).json({
-      message: err.message,
-    });
+    const error = new CustomError("unable to delete tours", statusCode.BAD_REQUEST);
+      return next(error);
   } else {
     res.status(200).json({
       success: true,
@@ -123,10 +121,8 @@ exports.updateTour = asyncWrapper(async (req, res, next) => {
     { new: true }
   );
   if (!updateTour) {
-    res.status(404).json({
-      success: false,
-      message: "not found",
-    });
+    const error = new CustomError("tour with the ID not found", 404)
+    return next(error)
   }
   res.status(200).json({
     success: true,
@@ -142,9 +138,8 @@ exports.BookTour = asyncWrapper(async (req, res) => {
 
   const isTour = await Tour.findById(tourId);
   if (!isTour) {
-    return res.status(statusCode.NOT_FOUND).json({
-      message: "tour not found",
-    });
+    const error = new CustomError("tour with the ID not found", 404)
+    return next(error)
   } else {
     const bookNewTour = new BookTour({
       place: req.body.place,
@@ -163,13 +158,12 @@ exports.BookTour = asyncWrapper(async (req, res) => {
 });
 
 // get a booked tour
-exports.getBookedTour = asyncWrapper( async (req, res) => {
+exports.getBookedTour = asyncWrapper(async (req, res) => {
   const { tourId } = req.body;
   const isTour = await BookTour.findOne({ _id: tourId });
   if (!isTour) {
-    return res.status(statusCode.NOT_FOUND).json({
-      message: "not found",
-    });
+    const error = new CustomError("tour with the ID not found", 404)
+    return next(error)
   } else {
     return res.status(statusCode.OK).json({
       message: "successful",
@@ -183,9 +177,8 @@ exports.updateBookedTour = asyncWrapper(async (req, res) => {
   const { tourId } = req.params;
   const isBookedTour = await BookedTour.findById(tourId);
   if (!isBookedTour) {
-    res.status(statusCode.NOT_FOUND).json({
-      message: "not found",
-    });
+    const error = new CustomError("tour with the ID not found", 404)
+    return next(error)
   } else {
     await BookedTour.findByIdAndUpdate(
       tourId,
