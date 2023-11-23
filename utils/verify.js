@@ -20,13 +20,4 @@ const isAdmin = async (req, res, next) => {
   }
 };
 
-const logRoute = async (req, res, next) => {
-  if (!req.originalUrl) {
-    console.log("not a valid route");
-  } else {
-    console.log(req.originalUrl);
-    next();
-  }
-};
-
-module.exports = { isUser, isAdmin, logRoute };
+module.exports = { isUser, isAdmin };

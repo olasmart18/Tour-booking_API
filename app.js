@@ -14,6 +14,8 @@ const authRouter = require('./route/auth');
 const localPassport = require ("./utils/passport").localPassport;
 const googlePassport = require ("./utils/passport").googlePassport;
 const logRoute  = require('./utils/verify').logRoute;
+const errorHandler = require('./middlewares/errorHandler');
+const CustomError = require('./middlewares/error');
 
 // initialize passport function to passport
 localPassport(passport)
@@ -51,9 +53,16 @@ app.use(passport.session()); // create passport session
 app.use('/api', tourRoute);
 app.use('/api', UserRouter);
 app.use('/', authRouter);
+ 
 
-// log every route accessed
-app.use(logRoute);
+// Catch undefined routes
+// app.all('*', (req, res, next) => {
+//     const err = new CustomError(`Can't find ${req.originalUrl} on this server!`, 404);
+//     next(err);
+//   });
+
+ // Error handling middleware (should be defined last)
+app.use(errorHandler);
 
 connect(); // mongoDB connection 
 app.listen(port, () => {

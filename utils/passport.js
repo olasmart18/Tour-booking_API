@@ -2,7 +2,7 @@ const localStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const bcrypt = require("bcrypt");
 // const statusCode = require("http-status");
-const { User, OtherUser } = require("../models/usersModel");
+const User = require("../models/usersModel");
 
 // create passort local strategy
 const localPassport = async (passport) => {
@@ -68,17 +68,17 @@ const googlePassport = async (passport) => {
         passReqToCallback: true,
       },
       async (request, accessToken, refreshToken, profile, done) => {
-        const user = await OtherUser.findOne({ googleId: profile.id });
+        const user = await User.findOne({ googleId: profile.id });
         console.log(profile);
         if (user) {
           return done(null, user);
         } else {
           try {
-             await new OtherUser({
+             await new User({
             googleId: profile.id,
             role: "user"
           })
-            .save()
+            .save({validateBeforeSave: false}) // allow user to register without checking other field
             .then((user) => {
               return done(null, user);
             });

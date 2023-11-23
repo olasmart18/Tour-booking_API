@@ -8,10 +8,10 @@ const {
   updateUser
 } = require('../controllers/usersController');
 
-route.get('/api/users', getAllUser);
-route.get('/api/users/:id', getSingleUser);
-route.delete('/api/users/:id', deleteSingleUser);
-route.delete('/api/users', deleteAll);
-route.patch('/api/users/:id', updateUser);
+route.get('/users', getAllUser);
+route.get('/users/:id', getSingleUser);
+route.delete('/users/:id', deleteSingleUser);
+route.delete('/users', deleteAll);
+route.patch('/users/:id', updateUser);
 
 module.exports = route;

@@ -2,6 +2,9 @@ const { Schema, model } = require("mongoose");
 
 const userSchema = new Schema(
   {
+    googleId: {
+      type: String,
+    },
     username: {
       type: String,
       required: true,
@@ -18,22 +21,15 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    passwordChangedAt: Date
   },
   {
     timestamps: true,
   }
 );
 
-otherUserSchema = new Schema({
-  googleId: {
-    type: String,
-  },
-  role: {
-    type: String,
-  },
-});
-
 const User = new model("User", userSchema);
-const OtherUser = new model("OtherUser", otherUserSchema);
 
-module.exports = { User, OtherUser };
+module.exports = User;

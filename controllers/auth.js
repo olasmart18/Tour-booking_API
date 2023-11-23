@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const statusCode = require("http-status");
 const User = require("../models/usersModel");
+const sendMail = require("../utils/nodemailer").sendMail;
 const passport = require("passport");
 
 // register new  user
@@ -57,7 +59,7 @@ exports.login = async (req, res, next) => {
     } else {
       if (!user) {
         res.status(statusCode.NOT_FOUND).json({
-          message: "user not found",
+          message: "not a user or incorrect password",
         });
       } else {
         // Here, we use req.login(user) to establish a login session
@@ -144,4 +146,88 @@ exports.logout = async (req, res) => {
   }
 };
 
+// forgot password route
+exports.forgotPassword = async (req, res) => {
+  try {
+    const isUser = await User.findOne({ email: req.body.email });
+    if (!isUser) {
+      return res.status(statusCode.NOT_FOUND).json({
+        message: "not a valid user, user not found",
+      });
+    }
+    const token = crypto.randomBytes(32).toString("hex");
+    const accessToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    isUser.passwordResetToken = accessToken;
+    isUser.passwordResetExpires = Date.now() + 10 * 60 * 1000; // expires in 10mins
+    const resetUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/api/auth/resetPassword/${token}`;
+    const message = `you have make request to reset your password, please click the link below \n\n ${resetUrl}`;
+    await isUser.save({ validateBeforeSave: false });
+
+    // send password reset link to user email
+    try {
+      await sendMail({
+        sender: "olasmartTech&co@mail.com",
+        subject: "password reset recieved",
+        email: isUser.email,
+        message: message,
+      });
+      res.status(statusCode.CREATED).json({
+        message: "successful",
+        link: message,
+      });
+    } catch (err) {
+      (isUser.passwordResetToken = undefined),
+        (isUser.passwordResetExpires = undefined),
+        isUser.save({ validateBeforeSave: false });
+      return res.status(statusCode.BAD_REQUEST).json({
+        message: err.message,
+      });
+    }
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR).json({
+      message: err.message,
+    });
+  }
+};
+
 // password reset route
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    // encrypt token to compare to saved token in DB
+    const isToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    // hash password provided by user before save
+    const saltRound = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, saltRound);
+
+    // find user in the database
+    const user = await User.findOne({
+      passwordResetToken: isToken,
+      passwordResetExpires: { $gte: Date.now() },
+    });
+    if (!user) {
+      return res.status(statusCode.NOT_FOUND).json({
+        message: "not found or token has eexpired",
+      });
+    }
+    (user.password = hash),
+      (user.passwordResetToken = undefined),
+      (user.passwordResetExpires = undefined),
+      (user.passwordChangedAt = Date.now());
+    // save instance of user
+    await user.save({ validateBeforeSave: false });
+    return res.status(statusCode.CREATED).json({
+      message: "password reset successfully",
+    });
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR).json({
+      message: err.message,
+    });
+  }
+};
