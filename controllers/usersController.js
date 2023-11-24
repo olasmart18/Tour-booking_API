@@ -1,90 +1,71 @@
-const User = require('../models/usersModel');
+const User = require("../models/usersModel");
+const CustomError = require("../middlewares/error");
+const asyncWrapper = require("../utils/asyncWrapper").asyncWrapper;
 
 // get all user
-exports.getAllUser = async (req, res) => {
-  try {
-    const foundUsers = await User.find({});
-    res.status(200).json({
-      success: true,
-      message: 'users found',
-      data: foundUsers
-    });
-  } catch (err) {
-    res.status(404).json({
-      success: false,
-      message: 'not found'
-    });
+exports.getAllUser = asyncWrapper(async (req, res, next) => {
+  const foundUsers = await User.find({});
+  if (!foundUsers) {
+    const error = new CustomError("No user found", 404);
+    next(error);
   }
-};
+  res.status(200).json({
+    success: true,
+    message: "users found",
+    data: foundUsers,
+  });
+});
 
 // get single user by id
-exports.getSingleUser = async (req, res) => {
+exports.getSingleUser = asyncWrapper(async (req, res, next) => {
   const userId = req.params.id;
-  try {
-    const foundUser = await User.findById(userId);
-    res.status(200).json({
-      success: true,
-      message: 'successful',
-      data: foundUser
-    });
-  } catch (err) {
-    res.status(404).json({
-      success: false,
-      message: 'user not found'
-    });
+  const foundUser = await User.findById(userId);
+  if (!foundUser) {
+    const error = new CustomError("No user found", 404);
+    next(error);
   }
-};
+  res.status(200).json({
+    success: true,
+    message: "successful",
+    data: foundUser,
+  });
+});
 
 // delete single user
-exports.deleteSingleUser = async (req, res) => {
+exports.deleteSingleUser = asyncWrapper(async (req, res) => {
   const userId = req.params.id;
-  try {
-    const delUser = await User.findByIdAndDelete(userId);
-    res.status(200).json({
-      success: true,
-      message: 'successful',
-      data: `user with ${delUser._id} ID has been deleted`
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: 'something went wrong, try again'
-    });
+  const delUser = await User.findByIdAndDelete(userId);
+  if (!delUser) {
+    const error = new CustomError("No user found", 404);
+    next(error);
   }
-};
+  res.status(200).json({
+    success: true,
+    message: "successful",
+    data: `user with ${delUser._id} ID has been deleted`,
+  });
+});
 
 // delete all user
-exports.deleteAll = async (req, res) => {
-  try {
-    await User.deleteMany();
-    res.status(200).json({
-      success: true,
-      message: 'successful'
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: 'something went wrong, try again'
-    });
-  }
-};
+exports.deleteAll = asyncWrapper(async (req, res) => {
+  await User.deleteMany();
+  res.status(200).json({
+    success: true,
+    message: "successful",
+  });
+});
 
 // update user
-exports.updateUser = async (req, res) => {
+exports.updateUser = asyncWrapper(async (req, res) => {
   const userId = req.params.id;
-
-  try {
-    const updatedUser = await User.findByIdAndUpdate(userId,
-      { $set: req.body }, { new: true });
-    res.status(200).json({
-      success: true,
-      message: 'successful',
-      data: updatedUser
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: 'something went wrong, try again'
-    });
-  }
-};
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { $set: req.body },
+    { new: true }
+  );
+  res.status(200).json({
+    success: true,
+    message: "successful",
+    data: updatedUser,
+  });
+});

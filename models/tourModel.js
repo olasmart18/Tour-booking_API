@@ -16,7 +16,7 @@ const tourSchema = Schema(
     },
     country: {
       type: String,
-      required: true,
+      required: [true, "field is require for tour"]
     },
     state: {
       type: String,

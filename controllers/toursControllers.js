@@ -54,13 +54,13 @@ exports.allTour = asyncWrapper(async (req, res) => {
   const tours = await Tour.find({});
   if (tours.length !== 0) {
     res.status(200).json({
-      status: success,
+      status: "success",
       message: "tours found",
       data: tours,
     });
   } else {
     res.status(200).json({
-      status: success,
+      status: "success",
       message: "no tour is found",
       data: null,
     });
