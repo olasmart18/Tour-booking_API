@@ -2,12 +2,17 @@
   "name": "tour-booking_api",
   "version": "1.0.0",
   "description": "Tour booking RESTFUL API",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test jest",
     "start": "node app.js",
     "start:dev": "SET NODE_ENV=development& nodemon app.js",
-    "start:prod": "SET NODE_ENV=production& nodemon app.js"
+    "start:prod": "SET NODE_ENV=production& nodemon app.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "repository": {
     "type": "git",
@@ -30,6 +35,7 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "http-status": "^1.7.3",
+    "joi": "^17.11.0",
     "mongoose": "^7.0.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
@@ -40,6 +46,13 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-xo": "^0.43.1",
+    "eslint-plugin-prettier": "^5.0.1",
+    "jest": "^29.7.0",
+    "nodemon": "^2.0.22",
+    "prettier": "^3.1.1",
+    "supertest": "^6.3.3"
   }
 }

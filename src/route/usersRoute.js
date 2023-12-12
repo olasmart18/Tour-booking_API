@@ -1,11 +1,11 @@
 const express = require('express');
 const route = express.Router();
 const {
-  getAllUser,
-  getSingleUser,
-  deleteSingleUser,
-  deleteAll,
-  updateUser
+	getAllUser,
+	getSingleUser,
+	deleteSingleUser,
+	deleteAll,
+	updateUser,
 } = require('../controllers/usersController');
 
 route.get('/users', getAllUser);
