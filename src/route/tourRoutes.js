@@ -2,16 +2,16 @@ const express = require('express');
 
 const route = express.Router();
 const {
-	allTour,
-	createTour,
-	getSingleTour,
-	deleteSingleTour,
-	deleteTours,
-	updateTour,
-	updateBookedTour,
-	searchTour,
-	BookTour,
-	getBookedTour,
+  allTour,
+  createTour,
+  getSingleTour,
+  deleteSingleTour,
+  deleteTours,
+  updateTour,
+  updateBookedTour,
+  searchTour,
+  BookTour,
+  getBookedTour,
 } = require('../controllers/toursControllers');
 
 // Ensure route protection

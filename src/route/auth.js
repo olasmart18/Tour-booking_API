@@ -1,12 +1,12 @@
 const express = require('express');
 const {
-	createUser,
-	login,
-	googleAuth,
-	googleAuthCallBack,
-	logout,
-	forgotPassword,
-	resetPassword,
+  createUser,
+  login,
+  googleAuth,
+  googleAuthCallBack,
+  logout,
+  forgotPassword,
+  resetPassword,
 } = require('../controllers/auth');
 const router = express.Router();
 

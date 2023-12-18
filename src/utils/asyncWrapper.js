@@ -1,5 +1,5 @@
 // Async error handler
 
 exports.asyncWrapper = func => (req, res, next) => {
-	func(req, res, next).catch(err => next(err));
+  func(req, res, next).catch(err => next(err));
 };

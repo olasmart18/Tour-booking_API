@@ -16,46 +16,46 @@ const Joi = require('joi');
 // });
 
 const userSchema = new Schema(
-	{
-		googleId: {
-			type: String,
-		},
-		username: {
-			type: String,
-			required: true,
-		},
+  {
+    googleId: {
+      type: String,
+    },
+    username: {
+      type: String,
+      required: true,
+    },
 
-		email: {
-			type: String,
-			required: true,
-			unique: true,
-			validate: {
-				validator: value => validator.isEmail(value),
-				message: 'Invalid email address',
-			},
-		},
-		password: {
-			type: String,
-			required: true,
-			minlength: 6,
-			maxlength: 100,
-			validate: {
-				validator: value => /^[a-zA-Z0-9][a-zA-Z0-9]{2,29}$/.test(value),
-				message: 'Invalid password format',
-			},
-		},
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: value => validator.isEmail(value),
+        message: 'Invalid email address',
+      },
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
+      maxlength: 100,
+      validate: {
+        validator: value => /^[a-zA-Z0-9][a-zA-Z0-9]{2,29}$/.test(value),
+        message: 'Invalid password format',
+      },
+    },
 
-		role: {
-			type: String,
-			required: true,
-		},
-		passwordResetToken: String,
-		passwordResetExpires: Date,
-		passwordChangedAt: Date,
-	},
-	{
-		timestamps: true,
-	},
+    role: {
+      type: String,
+      required: true,
+    },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    passwordChangedAt: Date,
+  },
+  {
+    timestamps: true,
+  },
 
 );
 
